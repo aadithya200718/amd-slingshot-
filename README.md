@@ -1,4 +1,3 @@
-# amd-slingshot-readme
 # AMD Slingshot — 9 Differentiated Hackathon Ideas
 ---
 ## THEME 1: Generative AI for Everyone
