@@ -1,177 +1,673 @@
-# AMD Slingshot — 9 Differentiated Hackathon Ideas
+# 🔍 Comprehensive Analysis: AI-Powered Banking Fraud & Compliance Platform
+
+> Two problem statements, one unified vision — a modular, privacy-first platform for detecting GenAI fraud and automating regulatory compliance.
+
 ---
-## THEME 1: Generative AI for Everyone
+
+## Table of Contents
+
+1. [Executive Summary](#executive-summary)
+2. [Problem Statement 1: Detecting AI-Generated Fraud Content](#ps1)
+3. [Problem Statement 2: SAR Narrative Generator with Audit Trail](#ps2)
+4. [Competitive Analysis](#competitive-analysis)
+5. [Unified Architecture with MCP / A2A](#unified-architecture)
+6. [Hot Topic Integration: MCP, A2A, AP2](#hot-topics)
+7. [Additional Fraud Detection Capabilities](#additional-fraud)
+8. [Feasibility Assessment](#feasibility)
+9. [Prototype Implementation Steps](#prototype-steps)
+10. [How to Compile Everything for Presentation](#presentation-guide)
+11. [Key Statistics & Data Points (India-Specific)](#stats)
+
 ---
-### 1.1 **CampusForge** — _Multi-agent creative studio where student clubs co-produce event content end-to-end_
-| Section                  | Details                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ | ----------- | ----------------------------------------------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------- |
-| **The Problem**          | College fests (Riviera, Mood Indigo) need posters, reels, scripts, and music. Clubs juggle 5+ tools, lose versioning, and non-designers are locked out. A single fest generates 200+ assets with zero consistency.                                                                                                                                                                                                                                  |
-| **The Solution**         | An agentic creative pipeline where specialized AI agents (Design Agent, Copy Agent, Music Agent, Brand-Consistency Agent) collaborate via A2A protocol. Users describe intent in natural language; agents negotiate, produce, and review assets collaboratively. MCP servers connect to the club's Google Drive, Canva exports, and social media APIs.                                                                                              |
-| **Differentiating Tech** | **A2A Protocol**: Agents discover each other's capabilities and delegate (e.g., Copy Agent sends tagline to Design Agent for poster overlay). **MCP Servers**: Live access to club's asset library, Google Drive, font repositories. **Agentic Workflows (LangGraph)**: Multi-step plan→create→review→revise loop with human-in-the-loop approval gates. **XAI**: Each asset has a provenance card showing which agent made which decision and why. |
-| **System Architecture**  | `User Intent (NL) → Orchestrator Agent (LangGraph) --(A2A)-→ [Copy Agent                                                                                                                                                                                                                                                                                                                                                                            | Design Agent | Music Agent | Brand Agent] → each agent uses MCP to access [Google Drive Server | Font Server | Social API Server] → Generated Assets → Brand Agent reviews consistency → Human approval gate → Final Export` |
-| **Key Features**         | 1. Natural-language creative briefs (LangGraph orchestration) 2. A2A agent negotiation for cross-modal consistency 3. Brand-consistency guardian agent with CLIP-based style matching 4. MCP-connected asset library (no re-uploading) 5. Provenance cards with full attribution chain (XAI) 6. Multilingual caption generation (Hindi/Tamil/Telugu)                                                                                                |
-| **Tech Stack**           | Llama 3 (text), Stable Diffusion XL (images), MusicGen (audio), LangGraph, FastAPI, MCP SDK, A2A protocol, CLIP, Google Drive API                                                                                                                                                                                                                                                                                                                   |
-| **Wow Factor**           | Live demo: type "make a cyberpunk poster for our coding hackathon with matching Instagram caption in Hindi" → watch 3 agents negotiate in real-time via A2A, produce coordinated assets, and auto-push to a connected Drive folder.                                                                                                                                                                                                                 |
-| **MVP Scope**            | 2 agents (Copy + Design) with A2A communication, 1 MCP server (file system), LangGraph orchestrator, simple web UI showing agent conversation + outputs.                                                                                                                                                                                                                                                                                            |
-| **Pitch Story**          | "Last year, IIT Bombay's Techfest team spent 3 weeks making 150 posters across 8 people with zero brand consistency. Imagine if you could describe your event vibe in one sentence and watch AI agents collaborate to produce print-ready, brand-consistent assets in minutes."                                                                                                                                                                     |
-| **Responsible AI**       | Content filters on generated images (NSFW detection), mandatory attribution watermarks, bias checks on generated copy (gender/caste-neutral language detector), human approval gate before any public export.                                                                                                                                                                                                                                       |
+
+## 1. Executive Summary {#executive-summary}
+
+Both problem statements are **highly complementary** and can be packaged as a **single unified platform** — think of it as **"FraudShield AI"** (or any name you choose). The pitch:
+
+> _"An end-to-end, privacy-first AI platform that detects GenAI-generated fraud (phishing, deepfakes, spoofing, prompt injection) AND automates SAR/STR narrative generation with full audit trails — powered by locally-hosted LLMs, MCP protocol for tool integration, and A2A protocol for multi-agent orchestration."_
+
+### Why These Two Fit Together
+
+```mermaid
+graph LR
+    A["🛡️ Fraud Detection Engine"] -->|"Flags suspicious activity"| B["📋 SAR/STR Generator"]
+    B -->|"Auto-generates reports"| C["👤 Human Analyst Review"]
+    C -->|"Feedback loop"| A
+    A -->|"Audit trail data"| B
+```
+
+- **PS1 (Fraud Detection)** catches the threats → feeds alerts to → **PS2 (SAR Generator)** which auto-drafts regulatory reports
+- Both share the same data privacy constraints (offline LLMs, no external data transmission)
+- Both benefit from MCP (tool integration) and A2A (multi-agent coordination)
+
 ---
-### 1.2 **LangBridge** — _On-device multilingual content creator that works offline in Tier-2/3 college hostels_
-| Section                  | Details                                                                                                                                                                                                                                                                                                                                                             |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **The Problem**          | 60% of Indian college students prefer consuming content in regional languages, but creation tools are English-only. Students in hostels in Tier-2 cities face unreliable internet — cloud-only GenAI is unusable during exams/fests.                                                                                                                                |
-| **The Solution**         | An on-device generative AI suite running on AMD Ryzen AI (XDNA NPU) that does text generation, translation, and image creation entirely offline. A federated learning layer lets multiple hostel laptops collaboratively improve the regional language model without sharing raw data.                                                                              |
-| **Differentiating Tech** | **AMD Ryzen AI / XDNA NPU**: All inference runs on-device — zero cloud cost, zero latency, full privacy. **Federated Learning**: Hostel laptops form a local mesh to improve Indic language models collaboratively. **MCP Servers**: Local file system + campus LMS access when online. **Agentic Workflows**: CrewAI pipeline for translate→adapt→generate→format. |
-| **System Architecture**  | `User Input (any Indian language) → On-Device Orchestrator (CrewAI on ONNX Runtime + XDNA NPU) → [Translation Agent (IndicTrans2)                                                                                                                                                                                                                                   | Content Agent (Llama 3 8B quantized) | Image Agent (SDXL Turbo quantized)] → Local Output. Periodically: Federated Aggregation Server ←→ multiple laptops share model gradients only (no raw data).` |
-| **Key Features**         | 1. Fully offline text/image generation on AMD NPU 2. 12 Indian languages via IndicTrans2 (on-device) 3. Federated fine-tuning across hostel network 4. MCP integration with campus LMS when online 5. Voice input via on-device Whisper 6. Content templates for assignments, posters, emails                                                                       |
-| **Tech Stack**           | Llama 3 8B (ONNX quantized), SDXL Turbo, IndicTrans2, Whisper Small, ONNX Runtime with AMD XDNA, CrewAI, Flower (federated learning), FastAPI, Electron (desktop app)                                                                                                                                                                                               |
-| **Wow Factor**           | Demo entirely disconnected from internet: generate a Hindi essay, translate to Tamil, create a matching poster — all in <5 seconds on a Ryzen AI laptop. Then show federated learning dashboard where 3 machines improved the model overnight without sharing data.                                                                                                 |
-| **MVP Scope**            | Desktop app (Electron) with on-device Llama 3 8B + IndicTrans2 on ONNX/XDNA, basic text generation + translation in 3 languages, mock federated learning dashboard.                                                                                                                                                                                                 |
-| **Pitch Story**          | "A student in Warangal hostel has no Wi-Fi at 2 AM before her assignment deadline. She opens LangBridge on her AMD laptop, dictates in Telugu, gets a polished English essay with a matching infographic — all offline, all private, all free."                                                                                                                     |
-| **Responsible AI**       | All data stays on-device (zero cloud exposure), federated learning uses differential privacy (ε=1.0), content filters run locally, generated content includes "AI-assisted" metadata tag.                                                                                                                                                                           |
+
+## 2. Problem Statement 1: Detecting AI-Generated Fraud Content {#ps1}
+
+### 2.1 Problem Decomposition
+
+| Fraud Vector                           | Detection Approach                                   | Difficulty  | Priority    |
+| -------------------------------------- | ---------------------------------------------------- | ----------- | ----------- |
+| **AI-generated phishing emails**       | LLM-based text classification + stylometric analysis | Medium      | 🔴 Critical |
+| **Credential exposure detection**      | Regex + entropy analysis + secret scanning           | Low-Medium  | 🔴 Critical |
+| **Attachment verification (Pharming)** | Sandbox execution + hash matching + file analysis    | Medium-High | 🟡 High     |
+| **Website phishing testing**           | URL analysis + DOM comparison + SSL cert validation  | Medium      | 🟡 High     |
+| **Cookie manipulation detection**      | HTTP header analysis + cookie integrity checks       | Medium      | 🟢 Medium   |
+| **Deepfake voice scams**               | MFCC + spectrogram analysis + CNN/RNN classifiers    | High        | 🟡 High     |
+| **Prompt injection / jailbreaking**    | Input sanitization + canary tokens + LLM guardrails  | High        | 🟡 High     |
+| **Data poisoning detection**           | Statistical analysis + drift detection               | Very High   | 🟢 Medium   |
+| **Agentic AI sandbox testing**         | Isolated execution environment + behavior monitoring | High        | 🟢 Medium   |
+| **All types of spoofing**              | Multi-signal verification (SPF/DKIM/DMARC, ARP, DNS) | Medium      | 🟡 High     |
+
+### 2.2 Recommended Tech Stack
+
+| Layer                     | Technology                                                                | Why                                                    |
+| ------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------ |
+| **LLM (local)**           | Ollama + Llama 3.1 8B / Mistral 7B                                        | Runs fully offline, no data leaves the environment     |
+| **AI-text detection**     | Fine-tuned DeBERTa / RoBERTa on Hugging Face                              | State-of-art classifier for AI-generated text          |
+| **Voice deepfake**        | Librosa (MFCC extraction) + PyTorch CNN                                   | MFCC-based approach as specified, proven 95%+ accuracy |
+| **Email parsing**         | `email` stdlib + SpamAssassin headers                                     | Parse EML/MSG, extract headers, body, attachments      |
+| **Phishing URL analysis** | `tldextract`, `whois`, `requests`, Google Safe Browsing API (local cache) | Multi-signal URL scoring                               |
+| **Sandbox**               | Docker/Firecracker micro-VMs or Bubblewrap                                | Isolated execution for attachment & agent testing      |
+| **Secret scanning**       | `detect-secrets` (Yelp), regex patterns                                   | Credential exposure detection                          |
+| **Spoofing checks**       | `checkdmarc`, `dnspython`, Scapy                                          | SPF/DKIM/DMARC + ARP/DNS spoofing detection            |
+| **Framework**             | FastAPI + Celery (async tasks)                                            | High-performance API with background processing        |
+| **Frontend**              | Streamlit / Gradio (demo) or React (production)                           | Interactive dashboard                                  |
+| **Vector DB**             | ChromaDB                                                                  | Local, lightweight, embeds threat signatures           |
+| **Database**              | SQLite / PostgreSQL                                                       | Alert and audit log storage                            |
+
+### 2.3 Data Sources
+
+| Dataset                       | Source                                      | Use                                                  |
+| ----------------------------- | ------------------------------------------- | ---------------------------------------------------- |
+| **Enron Email Dataset**       | [CMU Enron](https://www.cs.cmu.edu/~enron/) | Legitimate email baseline                            |
+| **Phishing Email Dataset**    | Kaggle / Hugging Face                       | Phishing email classification training               |
+| **Synthetic phishing emails** | Generate with GPT-4 / Claude / Gemini       | AI-generated phishing samples for detection training |
+| **ASVspoof Dataset**          | ASVspoof Challenge                          | Voice deepfake detection training                    |
+| **PhishTank**                 | OpenPhish / PhishTank                       | Known phishing URL database                          |
+| **OWASP Prompt Injection**    | OWASP LLM Top 10                            | Prompt injection test cases                          |
+
+### 2.4 Architecture (PS1)
+
+```mermaid
+graph TB
+    subgraph "Input Layer"
+        E["📧 Email Input"]
+        U["🌐 URL Input"]
+        V["🎤 Voice Input"]
+        A["📎 Attachment Input"]
+        P["💬 Prompt Input"]
+    end
+
+    subgraph "Detection Engines (MCP Tools)"
+        PE["Phishing Email<br/>Detector"]
+        UE["URL/Website<br/>Analyzer"]
+        VE["Voice Deepfake<br/>Detector"]
+        AE["Attachment<br/>Sandbox"]
+        PIE["Prompt Injection<br/>Detector"]
+        CE["Credential<br/>Scanner"]
+        SE["Spoofing<br/>Checker"]
+    end
+
+    subgraph "Orchestration Layer (A2A)"
+        ORC["🤖 Orchestrator Agent"]
+        RA["Risk Aggregator"]
+    end
+
+    subgraph "Output Layer"
+        RS["Risk Score<br/>(0-100)"]
+        EX["Human-Readable<br/>Explanation"]
+        AL["Alert System"]
+        SAR["→ SAR Generator<br/>(PS2 Integration)"]
+    end
+
+    E --> PE
+    E --> CE
+    E --> SE
+    U --> UE
+    V --> VE
+    A --> AE
+    P --> PIE
+
+    PE --> ORC
+    UE --> ORC
+    VE --> ORC
+    AE --> ORC
+    PIE --> ORC
+    CE --> ORC
+    SE --> ORC
+
+    ORC --> RA
+    RA --> RS
+    RA --> EX
+    RS --> AL
+    AL --> SAR
+```
+
 ---
-### 1.3 **ProvenanceAI** — _GenAI attribution engine that cryptographically proves who created what and how_ _(CROSS-THEME: GenAI + Cybersecurity)_
-| Section                  | Details                                                                                                                                                                                                                                                                                                                                                   |
-| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **The Problem**          | Students generate AI content for projects/competitions but face plagiarism accusations. Faculty can't distinguish AI-assisted from AI-generated. There's no standard way to prove your creative contribution vs. the AI's contribution.                                                                                                                   |
-| **The Solution**         | Every GenAI interaction is logged as a Merkle-tree-based provenance chain. ZKP lets students prove "I made 15+ substantive edits to this AI draft" without revealing the full edit history. An MCP-connected verification agent lets faculty validate claims.                                                                                             |
-| **Differentiating Tech** | **ZKP (Zero-Knowledge Proofs)**: Prove creative contribution metrics without exposing full interaction logs. **Agentic Workflows (LangGraph)**: Creation Agent → Logging Agent → Verification Agent pipeline. **MCP Servers**: Connect to university LMS, submission portals, and document stores. **XAI**: Visualize human vs. AI contribution heatmaps. |
-| **System Architecture**  | `Student creates content via GenAI interface → Every prompt/edit/revision logged locally → Merkle tree of interactions built → ZKP circuit generates proof of contribution level → Proof attached to submission. Faculty side: Verification Agent (MCP-connected to LMS) → validates ZKP → shows contribution heatmap (XAI).`                             |
-| **Key Features**         | 1. Interaction-level provenance logging (every keystroke/prompt) 2. ZKP proof of human contribution ratio 3. Contribution heatmap visualization (XAI) 4. MCP integration with university LMS for seamless submission 5. Agentic verification pipeline for faculty 6. Tamper-proof Merkle tree audit trail                                                 |
-| **Tech Stack**           | Llama 3, LangGraph, Circom/SnarkJS (ZKP), MCP SDK, FastAPI, React, IndexedDB (local logging), D3.js (heatmaps)                                                                                                                                                                                                                                            |
-| **Wow Factor**           | Student generates an essay, makes edits, submits — then faculty clicks "Verify" and sees a ZKP-validated percentage ("72% human contribution") with an interactive heatmap showing exactly which paragraphs were human-edited vs. AI-generated, without revealing the raw prompts.                                                                        |
-| **MVP Scope**            | Web app with built-in text editor + LLM, interaction logger, simplified ZKP proof generation, contribution heatmap visualization, mock LMS integration via MCP.                                                                                                                                                                                           |
-| **Pitch Story**          | "A DTU student submits a brilliant project report. The professor suspects it's entirely ChatGPT. With ProvenanceAI, the student clicks 'Prove' — a zero-knowledge proof instantly shows 72% human contribution with an edit heatmap, without revealing a single prompt."                                                                                  |
-| **Responsible AI**       | Privacy-first (ZKP reveals nothing beyond the claim), no raw prompt storage on servers, differential contribution thresholds to prevent gaming, transparent methodology published.                                                                                                                                                                        |
+
+## 3. Problem Statement 2: SAR Narrative Generator with Audit Trail {#ps2}
+
+### 3.1 Problem Decomposition
+
+| Component                       | What It Does                                                  | Complexity |
+| ------------------------------- | ------------------------------------------------------------- | ---------- |
+| **Data Ingestion**              | Ingest transaction alerts, KYC data, account/transaction data | Medium     |
+| **Pattern Recognition**         | Identify money laundering typologies, structuring, layering   | High       |
+| **Narrative Generation**        | Draft SAR/STR narrative in regulatory format                  | High       |
+| **Audit Trail**                 | Track every data point, rule match, and reasoning step        | Medium     |
+| **Human-in-the-Loop**           | Allow analysts to edit, approve, reject with tracked changes  | Medium     |
+| **Alert Mechanism**             | Generate alerts for high-risk patterns                        | Low-Medium |
+| **Role-Based Access**           | Control data access across domain boundaries                  | Medium     |
+| **Multi-Environment Awareness** | Adapt to on-prem, cloud, multi-cloud constraints              | Low        |
+
+### 3.2 Recommended Tech Stack
+
+| Layer              | Technology                                               | Why                                                   |
+| ------------------ | -------------------------------------------------------- | ----------------------------------------------------- |
+| **LLM**            | Ollama + Llama 3.1 70B (if GPU available) / 8B           | Narrative generation, runs locally                    |
+| **Orchestration**  | LangChain + LangGraph                                    | RAG pipeline, chain-of-thought for audit trail        |
+| **Vector DB**      | ChromaDB / Weaviate                                      | Store SAR templates, regulatory guidelines, past SARs |
+| **Explainability** | LangChain Callbacks + Custom Logging                     | Full reasoning trace for every decision               |
+| **Frontend**       | Streamlit (demo) / React + Rich Text Editor (production) | Interactive SAR editing UI                            |
+| **Database**       | PostgreSQL                                               | Case storage, audit logs, role-based access           |
+| **Workflow**       | Celery + Redis                                           | Async SAR generation, queue management                |
+| **Auth**           | JWT + RBAC middleware                                    | Role-based access control                             |
+
+### 3.3 SAR Generation Pipeline
+
+```mermaid
+sequenceDiagram
+    participant Alert as Transaction Alert
+    participant Ingest as Data Ingestion Agent
+    participant Enrich as Enrichment Agent
+    participant Detect as Crime Type Detector
+    participant Draft as SAR Narrative Drafter
+    participant Audit as Audit Trail Logger
+    participant Review as Human Analyst
+    participant File as Filing System
+
+    Alert->>Ingest: Raw alert + transaction data
+    Ingest->>Enrich: Anonymized features
+    Enrich->>Enrich: KYC lookup, account history, typology matching
+    Enrich->>Detect: Enriched case package
+    Detect->>Detect: Classify crime type (ML, structuring, etc.)
+    Detect->>Draft: Crime type + evidence bundle
+    Draft->>Draft: LLM generates narrative (RAG + templates)
+    Draft->>Audit: Log every data point, rule, reasoning
+    Draft->>Review: Draft SAR + audit trail
+    Review->>Review: Edit, annotate, approve/reject
+    Review->>Audit: Log edits + rationale
+    Review->>File: Approved SAR → filing system
+```
+
+### 3.4 The ₹50 Lakhs Example (From Problem Statement)
+
+Here's how the system would handle the real example:
+
+> **Input Alert:** Customer receives ₹50 lakhs from 47 different accounts in one week, then immediately transfers abroad.
+
+**System Processing:**
+
+1. **Data Ingestion Agent** pulls: transaction records, customer KYC, account opening date, usual transaction pattern
+2. **Enrichment Agent** identifies:
+   - 47 unique sender accounts (many newly opened)
+   - Total inflow: ₹50,00,000 in 7 days
+   - Historical average: ₹2,00,000/month (25x spike)
+   - Immediate outward remittance to non-FATF jurisdiction
+3. **Crime Type Detector** classifies:
+   - Primary: **Money Laundering — Layering** (confidence: 92%)
+   - Secondary: **Structuring / Smurfing** (confidence: 87%)
+4. **SAR Drafter** generates narrative referencing:
+   - RBI circular on STR filing
+   - PMLA Section 12 obligations
+   - Specific transaction IDs, dates, amounts
+   - Customer risk profile
+5. **Audit Trail** records every lookup, rule match, and why specific language was chosen
+
+**Generated Draft (snippet):**
+
+> _"During the period of [DATE] to [DATE], the subject account received 47 credit transactions totaling ₹50,00,000 from distinct originating accounts, representing a 25x deviation from the account's established behavioral baseline. Within 48 hours of receipt, the entire balance was remitted via SWIFT to [JURISDICTION]. This pattern is consistent with the layering stage of money laundering as defined under PMLA Section 3, read with Section 12..."_
+
 ---
-## THEME 2: AI in Education & Skilling
+
+## 4. Competitive Analysis {#competitive-analysis}
+
+### 4.1 PS1 Competitors: AI Fraud Detection
+
+| Competitor                      | Type            | Key Strengths                               | Key Weaknesses                                | Our Differentiation                                |
+| ------------------------------- | --------------- | ------------------------------------------- | --------------------------------------------- | -------------------------------------------------- |
+| **Check Point (Harmony Email)** | Commercial SaaS | 99.8% phishing catch rate, ThreatCloud AI   | Expensive, cloud-dependent, no voice/deepfake | We run **100% offline**, cover voice deepfakes     |
+| **Proofpoint**                  | Commercial SaaS | Massive threat intelligence, BEC protection | $$$, vendor lock-in, cloud-only               | **Privacy-first**, no data leaves the bank         |
+| **Cofense**                     | Commercial      | Combines AI + employee training             | Focused mainly on email, no multi-modal       | We cover **8+ fraud vectors** in one platform      |
+| **Sublime Security**            | Commercial      | Agentic AI architecture for email           | Email-only, newer company                     | **Multi-modal**: email + voice + web + attachments |
+| **Abnormal AI**                 | Commercial      | Identity-based behavioral analysis          | Cloud-native, expensive                       | **On-premises capable**, uses local LLMs           |
+| **PhishSentry.AI**              | Open Source     | Free browser extension                      | Browser-only, limited scope                   | **Enterprise-grade**, API-first, comprehensive     |
+| **Gophish**                     | Open Source     | Phishing simulation framework               | Testing tool, not detection                   | We **detect** real threats, not simulate them      |
+
+### 4.2 PS2 Competitors: SAR Narrative Generation
+
+| Competitor                | Type             | Key Strengths                             | Key Weaknesses                       | Our Differentiation                            |
+| ------------------------- | ---------------- | ----------------------------------------- | ------------------------------------ | ---------------------------------------------- |
+| **Lucinity (X-Sight AI)** | Commercial       | GIPA technology, end-to-end investigation | Proprietary, expensive, cloud        | **Open-source stack**, full audit trail        |
+| **Hawk AI**               | Commercial       | Pre-filled forms, direct FinCEN filing    | FinCEN-focused (US), not India-ready | **India RBI/FIU-IND compliant**                |
+| **SAS AML**               | Enterprise       | Market leader, massive install base       | Very expensive, complex deployment   | **Lightweight**, runs on commodity hardware    |
+| **Flagright AI**          | Commercial       | NLP-driven narrative generation           | Limited customization                | **Fully customizable** LLM prompts + templates |
+| **Hummingbird**           | Commercial       | AI editor workflow integration            | Early stage, limited features        | **Complete pipeline** from alert to filing     |
+| **SymphonyAI (Sensa)**    | Enterprise       | Agentic AI for investigations             | Enterprise pricing, complex          | **Hackathon-ready** with Streamlit demo        |
+| **Co-Investigator AI**    | Research (arXiv) | Agentic framework, specialized agents     | Academic paper, no production tool   | We **build the actual tool** they theorized    |
+
+### 4.3 Feasibility Verdict
+
+> [!IMPORTANT]
+> **Both problem statements are HIGHLY FEASIBLE** for a hackathon / prototype context.
+
+| Dimension                    | Assessment            | Notes                                                                          |
+| ---------------------------- | --------------------- | ------------------------------------------------------------------------------ |
+| **Technical Feasibility**    | ✅ High               | All components have well-proven open-source alternatives                       |
+| **Data Availability**        | ✅ High               | Enron dataset, Kaggle phishing sets, ASVspoof, can generate synthetic data     |
+| **Time to Prototype**        | ✅ 2-3 weeks for demo | Streamlit + FastAPI + Ollama gets you a working demo fast                      |
+| **Hardware Requirements**    | ⚠️ Medium             | Llama 3.1 70B needs GPU; 8B runs on CPU (slower)                               |
+| **Novelty Factor**           | ✅ High               | Combining fraud detection + SAR generation + MCP/A2A is unique                 |
+| **India-Specific Relevance** | ✅ Very High          | ₹36,014 crore in bank frauds (FY2024-25), RBI pushing digital fraud monitoring |
+
 ---
-### 2.1 **SkillGraph** — _Knowledge-graph-powered mastery system where AI agents collaboratively diagnose and fix learning gaps_
-| Section                  | Details                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **The Problem**          | Indian engineering students study 40+ subjects over 4 years but connections between concepts (e.g., linear algebra → ML → signal processing) are invisible. Students fail not because they don't study, but because they have invisible prerequisite gaps.                                                                                                                                                                 |
-| **The Solution**         | A Neo4j knowledge graph maps every concept and prerequisite across the curriculum. A multi-agent system (A2A) includes a Diagnostic Agent (finds gaps via adaptive testing), a Pathway Agent (builds personalized learning paths), and a Content Agent (generates explanations in the student's language).                                                                                                                 |
-| **Differentiating Tech** | **A2A Protocol**: Diagnostic Agent discovers and delegates to Pathway Agent and Content Agent. **Advanced RAG (Knowledge Graph + Hybrid Retrieval)**: Neo4j graph traversal + BM25 + dense retrieval for precise concept lookup. **MCP Servers**: Connect to university syllabus database, question banks, and student performance records. **Agentic Workflows (CrewAI)**: Plan→Diagnose→Remediate→Reassess loop.         |
-| **System Architecture**  | `Student takes adaptive quiz → Diagnostic Agent (CrewAI) analyzes responses → queries Neo4j Knowledge Graph via RAG → identifies prerequisite gaps → (A2A) delegates to Pathway Agent → generates personalized path → (A2A) delegates to Content Agent → generates multilingual micro-lessons → MCP pulls relevant resources from university question bank → Student progresses → Reassessment Agent triggers next cycle.` |
-| **Key Features**         | 1. Neo4j curriculum knowledge graph (500+ concepts, 2000+ edges) 2. Adaptive diagnostic testing via agentic workflow 3. A2A multi-agent collaboration (diagnose → plan → teach) 4. Hybrid RAG retrieval over textbooks + question banks 5. Multilingual explanations (Hindi, Tamil, Telugu) via IndicTrans2 6. MCP-connected university syllabus and grade data                                                            |
-| **Tech Stack**           | Neo4j, Llama 3, CrewAI, A2A protocol, MCP SDK, IndicTrans2, Sentence Transformers, BM25 (Elasticsearch), FastAPI, React, D3.js (graph visualization)                                                                                                                                                                                                                                                                       |
-| **Wow Factor**           | Student fails a Machine Learning quiz question on SVMs → system instantly traces the gap back 3 levels to "you never understood Lagrange multipliers in Math-III" → shows the full prerequisite chain on an interactive graph → generates a 10-minute micro-lesson in Hindi on that specific gap.                                                                                                                          |
-| **MVP Scope**            | Knowledge graph for 1 branch (CSE: 50 concepts, 200 edges), diagnostic quiz for 1 subject, 2 agents (Diagnostic + Content) with A2A, basic graph visualization, 2 languages.                                                                                                                                                                                                                                               |
-| **Pitch Story**          | "A VIT student keeps failing ML assignments but doesn't know _why_. SkillGraph's agents trace her failures to a linear algebra gap from 2 semesters ago, build a personalized 3-day remediation path, and teach her in Tamil. Her next score jumps 40%."                                                                                                                                                                   |
-| **Responsible AI**       | No student data shared across institutions, transparent gap-diagnosis reasoning (XAI), no punitive use of performance data, bias-tested question generation across demographics.                                                                                                                                                                                                                                           |
+
+## 5. Unified Architecture with MCP / A2A {#unified-architecture}
+
+This is where you **differentiate from every competitor** and hit the "hot topics" requirement.
+
+### 5.1 The Big Picture
+
+```mermaid
+graph TB
+    subgraph "🌐 MCP Layer — Tool Integration"
+        MCP_EMAIL["MCP Server:<br/>Email Parser Tool"]
+        MCP_URL["MCP Server:<br/>URL Analyzer Tool"]
+        MCP_VOICE["MCP Server:<br/>Voice Analyzer Tool"]
+        MCP_SANDBOX["MCP Server:<br/>Sandbox Tool"]
+        MCP_DB["MCP Server:<br/>Database Tool"]
+        MCP_TEMPLATE["MCP Server:<br/>SAR Template Tool"]
+    end
+
+    subgraph "🤖 A2A Layer — Agent Orchestration"
+        COORD["Coordinator Agent"]
+        FRAUD_AGENT["Fraud Detection<br/>Agent"]
+        SAR_AGENT["SAR Narrative<br/>Agent"]
+        AUDIT_AGENT["Audit Trail<br/>Agent"]
+        RISK_AGENT["Risk Scoring<br/>Agent"]
+    end
+
+    subgraph "📊 Presentation Layer"
+        DASH["Dashboard"]
+        SAR_EDITOR["SAR Editor"]
+        ALERTS["Alert Panel"]
+    end
+
+    MCP_EMAIL --> FRAUD_AGENT
+    MCP_URL --> FRAUD_AGENT
+    MCP_VOICE --> FRAUD_AGENT
+    MCP_SANDBOX --> FRAUD_AGENT
+    MCP_DB --> SAR_AGENT
+    MCP_TEMPLATE --> SAR_AGENT
+
+    FRAUD_AGENT <-->|"A2A Protocol"| COORD
+    SAR_AGENT <-->|"A2A Protocol"| COORD
+    AUDIT_AGENT <-->|"A2A Protocol"| COORD
+    RISK_AGENT <-->|"A2A Protocol"| COORD
+
+    COORD --> DASH
+    COORD --> SAR_EDITOR
+    COORD --> ALERTS
+```
+
+### 5.2 How MCP Works Here
+
+**MCP (Model Context Protocol)** = "USB-C for AI" — standardized way to give AI agents access to tools.
+
+Each detection module becomes an **MCP Server** that any LLM agent can call:
+
+```
+┌─────────────────────────────────────────────┐
+│  MCP Server: "email_analyzer"               │
+│                                             │
+│  Tool: analyze_email(eml_content)           │
+│    → Returns: {                             │
+│        is_phishing: true/false,             │
+│        confidence: 0.92,                    │
+│        ai_generated: true/false,            │
+│        risk_signals: [...],                 │
+│        explanation: "..."                   │
+│      }                                      │
+│                                             │
+│  Tool: extract_credentials(text)            │
+│    → Returns: {found_credentials: [...]}    │
+│                                             │
+│  Resource: phishing_signatures              │
+│    → Returns known phishing patterns        │
+└─────────────────────────────────────────────┘
+```
+
+**Why this matters for your presentation:**
+
+- Each fraud detection module is **independently deployable** as an MCP server
+- Any LLM (Ollama, Bedrock, etc.) can use them via standard protocol
+- **Plug-and-play**: banks can adopt individual modules without buying the whole platform
+- This is the **exact architecture Google, Anthropic, and OpenAI are pushing** in 2025
+
+### 5.3 How A2A Works Here
+
+**A2A (Agent-to-Agent Protocol)** = standardized communication between AI agents (Google, April 2025).
+
+```
+┌──────────────────────┐     A2A      ┌──────────────────────┐
+│  Fraud Detection     │◄────────────►│  SAR Generator       │
+│  Agent               │              │  Agent               │
+│                      │              │                      │
+│  "I found a          │   Agent Card │  "Let me draft a     │
+│   suspicious pattern │   Discovery  │   SAR narrative for  │
+│   in this email..."  │   + Task     │   this flagged       │
+│                      │   Delegation │   activity..."       │
+└──────────────────────┘              └──────────────────────┘
+         │                                      │
+         │           A2A Protocol               │
+         ▼                                      ▼
+┌──────────────────────┐              ┌──────────────────────┐
+│  Risk Scoring Agent  │              │  Audit Trail Agent   │
+│                      │              │                      │
+│  "Aggregated risk    │              │  "Logged all data    │
+│   score: 87/100      │              │   points, rules      │
+│   Tier: CRITICAL"    │              │   matched, and       │
+│                      │              │   reasoning steps."  │
+└──────────────────────┘              └──────────────────────┘
+```
+
+**Key A2A Concepts for your presentation:**
+
+- **Agent Cards**: Each agent publishes a JSON card describing its capabilities (like a business card)
+- **Task Delegation**: Coordinator agent delegates sub-tasks to specialist agents
+- **Streaming**: Real-time updates as agents process data
+- **Push Notifications**: Agents notify each other of new findings
+
 ---
-### 2.2 **VivaMentor** — _AI mock viva system with on-device speech analysis that trains students for oral exams_ _(CROSS-THEME: Education + Privacy/Cybersecurity)_
-| Section                  | Details                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **The Problem**          | Indian universities heavily weight viva voce exams (20-40% of marks), but students get zero practice with realistic examiners. Shy students from vernacular-medium backgrounds suffer disproportionately. Existing tools require cloud upload of voice data — a privacy nightmare.                                                                                                                                                             |
-| **The Solution**         | An on-device AI viva simulator running on AMD Ryzen AI that acts as a realistic examiner. It uses speech analysis (fluency, confidence, filler words) + content evaluation, all processed locally. A LangGraph agentic workflow simulates a multi-round viva with follow-up questions based on student responses.                                                                                                                              |
-| **Differentiating Tech** | **AMD Ryzen AI / XDNA NPU**: All speech processing + LLM inference on-device — no voice data leaves the laptop. **Agentic Workflows (LangGraph)**: Multi-turn examiner simulation with dynamic follow-up generation. **MCP Servers**: Connect to local syllabus PDFs and past question papers. **XAI**: Post-viva breakdown showing confidence score derivation, content accuracy mapping, and improvement suggestions.                        |
-| **System Architecture**  | `Student selects subject → MCP loads syllabus + past papers from local storage → Examiner Agent (LangGraph on XDNA NPU) generates opening question → Student speaks → On-device Whisper transcribes → Content Eval Agent scores answer → Speech Analysis Agent (on-device) measures fluency/confidence → Examiner Agent generates follow-up → [loop 5-8 rounds] → XAI Report Agent generates detailed feedback with attention visualizations.` |
-| **Key Features**         | 1. Realistic multi-round viva simulation (LangGraph) 2. On-device speech-to-text + analysis (AMD XDNA NPU) 3. Content accuracy evaluation against syllabus (RAG over local docs) 4. Confidence/fluency/filler-word metrics (on-device) 5. Post-viva XAI report with specific improvement tips 6. Supports Hindi/English code-switching (common in Indian vivas)                                                                                |
-| **Tech Stack**           | Llama 3 8B (ONNX quantized), Whisper Medium (ONNX), ONNX Runtime with XDNA, LangGraph, MCP SDK, librosa (speech features), FastAPI, Electron, Chart.js                                                                                                                                                                                                                                                                                         |
-| **Wow Factor**           | Completely offline demo: student does a 5-minute mock viva on Data Structures, the AI asks increasingly difficult follow-ups based on weak answers, then generates a detailed report showing "your explanation of AVL rotations lacked specificity — here's what a strong answer looks like" with a confidence waveform.                                                                                                                       |
-| **MVP Scope**            | Desktop app with on-device Whisper + Llama 3, viva simulation for 2 subjects (DSA, DBMS), basic speech metrics, XAI report, MCP server for local PDF syllabus.                                                                                                                                                                                                                                                                                 |
-| **Pitch Story**          | "Priya from a Tamil-medium school freezes during vivas — she knows the answers but can't articulate them. VivaMentor gives her 50 private practice sessions on her laptop with zero internet, analyzing her confidence and content, until she walks into the real viva prepared and poised."                                                                                                                                                   |
-| **Responsible AI**       | Zero cloud voice transmission (all on-device), no recordings stored by default, bias-tested across Indian English accents, no penalization for code-switching, transparent scoring rubric.                                                                                                                                                                                                                                                     |
+
+## 6. Hot Topic Integration: MCP, A2A, AP2 {#hot-topics}
+
+### 6.1 Model Context Protocol (MCP)
+
+| Aspect                 | How You Use It                                                                                                  |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------- |
+| **Origin**             | Anthropic (Nov 2024), Google adopted (Dec 2025)                                                                 |
+| **Our Use**            | Each detection module = MCP Server (tool provider)                                                              |
+| **Benefit**            | Standard interface, any LLM can use our tools                                                                   |
+| **Implementation**     | Python `mcp` SDK, FastAPI endpoints with MCP wrapper                                                            |
+| **Presentation Angle** | _"Our fraud detection tools follow the MCP standard — the same one Google, Anthropic, and 1000+ companies use"_ |
+
+### 6.2 Agent-to-Agent Protocol (A2A)
+
+| Aspect                 | How You Use It                                                                                                                       |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| **Origin**             | Google (April 2025), now under Linux Foundation                                                                                      |
+| **Our Use**            | Multi-agent orchestration across fraud + SAR modules                                                                                 |
+| **Benefit**            | Agents collaborate without sharing internal state                                                                                    |
+| **Implementation**     | Agent Cards (JSON), task delegation, streaming responses                                                                             |
+| **Presentation Angle** | _"Our agents use Google's A2A protocol for secure inter-agent communication — the same standard adopted by 50+ enterprise partners"_ |
+
+### 6.3 Agent Payments Protocol (AP2) — Bonus Point
+
+| Aspect                 | How You Use It                                                                                             |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------- |
+| **Origin**             | Google (September 2025)                                                                                    |
+| **Our Use**            | Monitor AI-agent-initiated transactions for fraud                                                          |
+| **Benefit**            | As banks start processing AI-agent payments, we can detect fraud in this new vector                        |
+| **Presentation Angle** | _"Future-proof: as AI agents start making payments via AP2, our system monitors these for fraud patterns"_ |
+
+### 6.4 Other Hot Topics to Mention
+
+| Topic                                    | Integration Point                                                |
+| ---------------------------------------- | ---------------------------------------------------------------- |
+| **RAG (Retrieval-Augmented Generation)** | SAR templates + regulatory guidelines in vector DB               |
+| **Agentic AI**                           | Multi-agent system with specialized fraud/compliance agents      |
+| **Guardrails / AI Safety**               | Prompt injection detection module protects the system's own LLMs |
+| **Explainable AI (XAI)**                 | Audit trail + SHAP values for every decision                     |
+| **Zero Trust Architecture**              | Role-based access, no implicit trust between components          |
+| **Digital Twin**                         | Sandbox environment mirrors production for safe testing          |
+
 ---
-### 2.3 **PeerProof** — _Decentralized peer-review system for student assignments with ZKP-based anonymous credibility_
-| Section                  | Details                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **The Problem**          | Faculty at Indian colleges with 60-student sections can't give meaningful feedback on every assignment. Peer review would help, but students don't trust anonymous reviews and reviewers fear academic politics. There's no way to prove reviewer credibility without revealing identity.                                                                                                                                   |
-| **The Solution**         | An AI-assisted peer review platform where reviewers' credibility is proven via ZKP (prove "I scored >80% in this subject" without revealing who you are). AI agents assist both reviewing and review-quality assessment. A2A protocol connects a Review Agent, Quality Agent, and Aggregation Agent.                                                                                                                        |
-| **Differentiating Tech** | **ZKP**: Prove reviewer qualifications without revealing identity. **A2A Protocol**: Review Agent, Quality-Check Agent, and Aggregation Agent collaborate. **Agentic Workflows (LangGraph)**: Assignment → distribute → review → quality-check → aggregate pipeline. **MCP Servers**: Connect to university grade database for ZKP credential verification. **Advanced RAG**: Rubric-aware retrieval for review assistance. |
-| **System Architecture**  | `Student submits assignment → Orchestrator Agent (LangGraph) distributes to 3 anonymous peer reviewers → Reviewer generates ZKP proof of subject credibility (MCP connects to grade DB) → Review Agent assists reviewer with rubric-aligned feedback (RAG over rubric) → Quality Agent (A2A) evaluates review quality → Aggregation Agent (A2A) synthesizes reviews → Final feedback + meta-review delivered to student.`   |
-| **Key Features**         | 1. ZKP-based anonymous reviewer credibility 2. AI-assisted rubric-aligned review suggestions (RAG) 3. A2A multi-agent review quality pipeline 4. Review-of-reviews (meta-review) for quality assurance 5. MCP-connected grade verification 6. Gamified reviewer reputation (non-identifying)                                                                                                                                |
-| **Tech Stack**           | Llama 3, LangGraph, A2A protocol, MCP SDK, Circom/SnarkJS (ZKP), FastAPI, React, PostgreSQL, Sentence Transformers                                                                                                                                                                                                                                                                                                          |
-| **Wow Factor**           | A reviewer's feedback is tagged "verified: reviewer scored A+ in this subject (ZK-proven)" — the submitter sees credible, actionable feedback without knowing who wrote it. The Quality Agent flags and filters low-effort reviews automatically.                                                                                                                                                                           |
-| **MVP Scope**            | Web app with assignment submission, ZKP proof generation (simplified), 2 agents (Review Assistant + Quality Check) with A2A, rubric-based RAG, mock grade database via MCP.                                                                                                                                                                                                                                                 |
-| **Pitch Story**          | "In a 300-student BITS Pilani course, the professor can't grade 300 reports. PeerProof lets classmates review each other anonymously — but with cryptographic proof that reviewers actually know the subject — and AI ensures every review is substantive."                                                                                                                                                                 |
-| **Responsible AI**       | Complete reviewer anonymity via ZKP, no identity correlation possible, AI review assistance is transparent ("AI suggested this point"), adversarial review detection, no data leaves university infrastructure.                                                                                                                                                                                                             |
+
+## 7. Additional Fraud Detection Capabilities {#additional-fraud}
+
+Beyond what the problem statement lists, consider these for extra points:
+
+| Additional Capability                | How It Works                                                  | Implementation Effort        |
+| ------------------------------------ | ------------------------------------------------------------- | ---------------------------- |
+| **SIM Swap Detection**               | Monitor sudden device/SIM changes before large transactions   | Low (API checks)             |
+| **Behavioral Biometrics**            | Detect anomalies in typing patterns, mouse movements          | Medium (JS SDK)              |
+| **QR Code Phishing (Quishing)**      | Decode and analyze QR codes in emails/attachments             | Low (pyzbar + URL analyzer)  |
+| **Business Email Compromise (BEC)**  | Detect impersonation of executives/vendors via writing style  | Medium (stylometric LLM)     |
+| **Mule Account Detection**           | Graph analysis of transaction networks to find money mules    | Medium (NetworkX)            |
+| **Synthetic Identity Fraud**         | Detect composite identities made from stolen PII fragments    | High (ML model)              |
+| **Real-Time Transaction Monitoring** | Stream processing of transactions for immediate fraud scoring | Medium (Kafka/Redis Streams) |
+| **Dark Web Monitoring**              | Check if customer credentials appear in leaked databases      | Low (HIBP API, local)        |
+
 ---
-## THEME 3: AI + Cybersecurity & Privacy
+
+## 8. Feasibility Assessment {#feasibility}
+
+### 8.1 Technical Risk Matrix
+
+| Component                     | Risk                              | Mitigation                                    |
+| ----------------------------- | --------------------------------- | --------------------------------------------- |
+| **Local LLM performance**     | 8B models may hallucinate         | Use structured prompts, RAG, validation layer |
+| **Voice deepfake accuracy**   | False positives on poor audio     | Multi-model ensemble, confidence thresholds   |
+| **Prompt injection evolving** | New attack vectors constantly     | OWASP LLM Top 10 + continuous rule updates    |
+| **Hardware constraints**      | GPU needed for larger models      | Offer CPU-compatible mode with smaller models |
+| **Regulatory compliance**     | SAR format varies by jurisdiction | Template engine supports multiple formats     |
+
+### 8.2 Effort Estimation (Prototype)
+
+| Module                    | Effort (Person-Days)   | Dependencies                       |
+| ------------------------- | ---------------------- | ---------------------------------- |
+| Email phishing detector   | 3-4 days               | Hugging Face model, Enron dataset  |
+| URL/website analyzer      | 2-3 days               | tldextract, whois, beautifulsoup   |
+| Voice deepfake detector   | 4-5 days               | Librosa, ASVspoof dataset, PyTorch |
+| Attachment sandbox        | 3-4 days               | Docker, ClamAV                     |
+| Prompt injection detector | 2-3 days               | OWASP rules, canary tokens         |
+| Credential scanner        | 1-2 days               | detect-secrets                     |
+| SAR narrative generator   | 4-5 days               | LangChain, Ollama, ChromaDB        |
+| Audit trail system        | 2-3 days               | PostgreSQL, logging framework      |
+| Dashboard UI              | 3-4 days               | Streamlit / React                  |
+| MCP server wrappers       | 2-3 days               | Python MCP SDK                     |
+| A2A agent orchestration   | 3-4 days               | Agent cards, task delegation       |
+| **Total**                 | **~30-40 person-days** | —                                  |
+
+> [!TIP]
+> For the hackathon, prioritize: **Email Phishing Detector + SAR Generator + Dashboard** as the core demo. Add voice deepfake and MCP/A2A as stretch goals.
+
 ---
-### 3.1 **PhishNet** — _Multi-agent phishing simulation & defense trainer with realistic campus-specific attack scenarios_
-| Section                  | Details                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **The Problem**          | Indian college students are the #1 target for phishing — fake placement emails, scholarship scams, UPI fraud. 73% of Indian students clicked at least one phishing link in 2024 (DSCI report). Universities do zero security training.                                                                                                                                                                                                                                                     |
-| **The Solution**         | A multi-agent system where an Attack-Simulation Agent generates realistic, campus-specific phishing scenarios (fake placement emails from TCS/Infosys, fake fee payment links), and a Defense-Training Agent teaches students to identify them. A2A protocol enables the attacker and defender agents to escalate difficulty adaptively.                                                                                                                                                   |
-| **Differentiating Tech** | **A2A Protocol**: Attack Agent and Defense Agent communicate to calibrate difficulty. **Agentic Workflows (LangGraph)**: Simulate → Test → Teach → Reassess adaptive loop. **MCP Servers**: Connect to campus email templates, university domain info, known scam databases. **On-device AI (AMD XDNA)**: URL/header analysis runs locally for privacy. **XAI**: Highlight exactly which email elements are suspicious and why.                                                            |
-| **System Architecture**  | `Student enrolls → Attack Simulation Agent (LangGraph) generates campus-specific phishing email using MCP (campus email templates + known scam DB) → Student attempts to classify (phish/legit) → Defense Agent evaluates response → (A2A) Attack Agent escalates difficulty if student succeeds → XAI module highlights red flags on incorrect answers → On-device URL analyzer (AMD XDNA) scans real emails from student's inbox for live threats → Weekly threat intelligence summary.` |
-| **Key Features**         | 1. Campus-specific phishing simulations (placement, fee, scholarship scams) 2. A2A adaptive difficulty between attacker/defender agents 3. On-device email header + URL analysis on AMD XDNA NPU 4. XAI explanations ("this URL is suspicious because...") 5. MCP-connected scam intelligence database 6. UPI fraud scenario training (India-specific)                                                                                                                                     |
-| **Tech Stack**           | Llama 3, LangGraph, A2A protocol, MCP SDK, ONNX Runtime (XDNA), FastAPI, React, PhishTank API, URLhaus API                                                                                                                                                                                                                                                                                                                                                                                 |
-| **Wow Factor**           | Live demo: generate a pixel-perfect fake Infosys placement email customized to the student's actual college, then walk through the AI's XAI breakdown showing 7 red flags the student missed — then scan the student's real inbox on-device and flag 2 actual suspicious emails.                                                                                                                                                                                                           |
-| **MVP Scope**            | Web app with 3 phishing scenario templates (placement, scholarship, UPI), adaptive quiz flow (2 agents with A2A), XAI explainer, on-device URL scanner, mock inbox scan.                                                                                                                                                                                                                                                                                                                   |
-| **Pitch Story**          | "Last month, 200 students at SRM University clicked a fake TCS placement link and lost their data. PhishNet trains students with hyper-realistic, campus-specific phishing simulations — and its AI gets _harder_ as you get better, just like real attackers."                                                                                                                                                                                                                            |
-| **Responsible AI**       | Generated phishing content is sandboxed and never sent as real emails, all analysis on-device (no email data to cloud), responsible disclosure if real threats detected, no student performance data shared with administration.                                                                                                                                                                                                                                                           |
+
+## 9. Prototype Implementation Steps (No Code, Architecture Only) {#prototype-steps}
+
+### Phase 1: Foundation (Days 1-3)
+
+1. **Set up Ollama** with Llama 3.1 8B locally
+2. **Set up FastAPI** project structure with modular services
+3. **Set up PostgreSQL** for audit logs and case storage
+4. **Set up ChromaDB** for vector storage (SAR templates, phishing signatures)
+5. **Download and prepare datasets**: Enron emails, Kaggle phishing dataset
+
+### Phase 2: Core Detection (Days 4-8)
+
+6. **Build Email Phishing Detector**:
+   - Parse email (headers, body, attachments)
+   - Run through fine-tuned DeBERTa/RoBERTa for AI-text detection
+   - Check SPF/DKIM/DMARC headers
+   - Extract and analyze embedded URLs
+   - Score and explain
+
+7. **Build Credential Scanner**:
+   - Scan email body + attachments for exposed secrets (API keys, passwords, tokens)
+   - Use entropy analysis + regex patterns
+
+8. **Build URL/Website Analyzer**:
+   - Domain age check, SSL validation, WHOIS lookup
+   - Visual similarity comparison with known banking sites
+   - Cookie integrity analysis
+
+### Phase 3: SAR Generator (Days 9-13)
+
+9. **Build Data Ingestion Pipeline**:
+   - Accept transaction alerts (JSON/CSV)
+   - Accept KYC data (structured)
+   - Anonymize PII before processing
+
+10. **Build RAG Pipeline for SAR**:
+    - Index SAR templates and RBI/PMLA guidelines in ChromaDB
+    - Create retrieval chain with LangChain
+
+11. **Build Narrative Generator**:
+    - System prompt with SAR structure template
+    - Chain-of-thought reasoning for audit trail
+    - LLM generates narrative referencing specific data points
+
+12. **Build Audit Trail Logger**:
+    - Log every data access, rule match, LLM prompt/response
+    - Store in PostgreSQL with timestamps and user IDs
+
+### Phase 4: Integration & UI (Days 14-18)
+
+13. **Build Streamlit Dashboard**:
+    - Email upload → analysis results panel
+    - Transaction alert → SAR draft panel
+    - Risk score visualization
+    - Audit trail viewer
+
+14. **Wrap modules as MCP Servers**:
+    - Each detection module exposes `tools` and `resources`
+    - Use Python MCP SDK
+
+15. **Implement A2A Agent Orchestration**:
+    - Create Agent Cards for each specialist agent
+    - Build coordinator agent for task delegation
+    - Implement inter-agent communication
+
+### Phase 5: Advanced Features (Days 19-22)
+
+16. **Add Voice Deepfake Detection**:
+    - Audio upload → Librosa MFCC extraction → CNN classifier
+    - Real/fake verdict with confidence score
+
+17. **Add Prompt Injection Sandbox**:
+    - Docker-based isolated environment
+    - Test external AI models for data leak vulnerabilities
+    - Report generation
+
+18. **Add Continuous Learning Pipeline**:
+    - Human feedback loop (mark false positives/negatives)
+    - Retrain/fine-tune detection models periodically
+
+### Phase 6: Polish & Present (Days 23-25)
+
+19. **End-to-end demo flow**: Email in → fraud detected → SAR auto-generated → analyst approves
+20. **Prepare presentation** with architecture diagrams, live demo, metrics
+
 ---
-### 3.2 **PrivacyLens** — _Privacy-preserving analytics for campus apps that proves compliance without exposing PII_ _(CROSS-THEME: Cybersecurity + Education)_
-| Section                  | Details                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **The Problem**          | Indian campus apps (attendance, LMS, hostel) collect massive PII (Aadhaar-linked IDs, biometrics, location). Universities need analytics ("what % of students attend regularly?") but can't do it without exposing raw PII to admin dashboards — violating DPDP Act 2023.                                                                                                                                                                                                                                  |
-| **The Solution**         | A privacy-preserving analytics layer that sits between campus databases and admin dashboards. Federated learning computes aggregate insights without centralizing data. ZKP lets individual students prove compliance ("I attended 75% classes") without revealing raw attendance logs.                                                                                                                                                                                                                    |
-| **Differentiating Tech** | **ZKP**: Students prove attendance/grade thresholds without revealing raw data. **Federated Learning**: Analytics computed across hostels/departments without centralizing PII. **MCP Servers**: Connect to existing campus databases (attendance, LMS, hostel) read-only. **Agentic Workflows (LangGraph)**: Query Agent → Privacy Agent → Aggregation Agent → Visualization Agent. **XAI**: Every dashboard metric shows how it was computed and what privacy guarantees apply.                          |
-| **System Architecture**  | `Admin asks "what % of CSE students have >75% attendance?" → Query Agent (LangGraph) parses intent → Privacy Agent checks if query is privacy-safe (k-anonymity, differential privacy) → MCP servers connect to attendance DB, LMS DB → Federated aggregation across department nodes (no raw data moves) → ZKP proofs generated for individual student claims → Visualization Agent renders dashboard with privacy guarantees → XAI labels show "this stat: ε=0.5 differential privacy, k=10 anonymity."` |
-| **Key Features**         | 1. ZKP student compliance proofs (attendance, grades) 2. Federated analytics across campus databases 3. DPDP Act 2023 compliance by design 4. MCP connectors for attendance, LMS, hostel databases 5. Privacy-safe query validation agent 6. XAI dashboard with privacy guarantee labels                                                                                                                                                                                                                   |
-| **Tech Stack**           | Llama 3, LangGraph, MCP SDK, Circom/SnarkJS (ZKP), Flower (federated learning), FastAPI, React, Apache Superset (dashboards), PostgreSQL                                                                                                                                                                                                                                                                                                                                                                   |
-| **Wow Factor**           | Admin sees "78% of CSE students exceed 75% attendance" with a green badge saying "ε=0.5 differential privacy — no individual student identifiable." Meanwhile, a student generates a ZKP proof for their scholarship application proving ">80% attendance" without the scholarship committee seeing a single attendance record.                                                                                                                                                                            |
-| **MVP Scope**            | Mock campus database (attendance + grades), Privacy Agent that validates query safety, ZKP proof generation for attendance threshold, basic dashboard with privacy labels, 1 MCP server connector.                                                                                                                                                                                                                                                                                                         |
-| **Pitch Story**          | "VIT's admin dashboard shows every student's Aadhaar-linked attendance record to 15 staff members — a DPDP Act violation waiting to happen. PrivacyLens gives them the same insights with mathematical privacy guarantees, and lets students prove their own compliance with zero-knowledge proofs."                                                                                                                                                                                                       |
-| **Responsible AI**       | Differential privacy (ε=0.5) on all aggregates, k-anonymity enforcement, ZKP reveals nothing beyond the claim, MCP servers are read-only (no write access to campus DBs), full audit trail of every query.                                                                                                                                                                                                                                                                                                 |
+
+## 10. How to Compile Everything for Presentation {#presentation-guide}
+
+### Slide Structure (Recommended 15-20 slides)
+
+| Slide # | Title                                  | Content                                                                          |
+| ------- | -------------------------------------- | -------------------------------------------------------------------------------- |
+| 1       | **Title Slide**                        | Platform name, team, hackathon                                                   |
+| 2       | **The Problem**                        | India fraud stats (₹36,014 crore), GenAI making fraud easier, SAR backlog crisis |
+| 3       | **Our Vision**                         | One unified platform for detection + compliance                                  |
+| 4       | **Fraud Detection — What We Catch**    | Visual grid of all 10+ fraud vectors                                             |
+| 5       | **SAR Generator — How We Report**      | Before/after: 5-6 hours manual vs. 10 minutes with AI                            |
+| 6       | **Architecture Overview**              | The unified MCP + A2A diagram                                                    |
+| 7       | **MCP: Why It Matters**                | "USB-C for AI" — each module is a pluggable tool                                 |
+| 8       | **A2A: Agent Orchestration**           | Multi-agent collaboration diagram                                                |
+| 9       | **Email Phishing Detection Deep Dive** | Pipeline diagram + accuracy metrics                                              |
+| 10      | **Voice Deepfake Detection Deep Dive** | MFCC spectrograms + model architecture                                           |
+| 11      | **SAR Generation Deep Dive**           | The ₹50 lakhs example, before/after                                              |
+| 12      | **Audit Trail & Explainability**       | Show exactly why the system flagged something                                    |
+| 13      | **Privacy & Security**                 | Offline LLMs, no data transmission, PII anonymization                            |
+| 14      | **Competitive Differentiators**        | Table vs. top competitors                                                        |
+| 15      | **Demo**                               | Live or recorded walkthrough                                                     |
+| 16      | **Tech Stack**                         | Clean visual of all technologies                                                 |
+| 17      | **Future Roadmap**                     | AP2 integration, continuous learning, more fraud vectors                         |
+| 18      | **Impact & Benefits**                  | Quantified savings, risk reduction, compliance                                   |
+| 19      | **Q&A**                                | —                                                                                |
+
+### Key Storytelling Arc
+
+```
+"GenAI is a double-edged sword for banking"
+    ↓
+"Fraudsters use it for phishing, deepfakes, and more"
+    ↓
+"Banks must detect these threats AND report them to regulators (SARs)"
+    ↓
+"Both processes are manual, slow, and error-prone"
+    ↓
+"We built FraudShield AI: an integrated platform that detects GenAI fraud
+ AND auto-generates regulatory reports"
+    ↓
+"Powered by locally-hosted LLMs (privacy), MCP (modularity), A2A (intelligence)"
+    ↓
+"Result: Faster detection, automated reporting, full audit trail, safer banking"
+```
+
 ---
-### 3.3 **GuardianMesh** — _Peer-to-peer on-device security network where hostel laptops collaboratively detect threats_
-| Section                  | Details                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **The Problem**          | College hostel networks are malware hotspots — shared Wi-Fi, USB drives passed around, cracked software. Individual antivirus fails because threats spread peer-to-peer within the hostel faster than cloud signatures update. Students can't afford enterprise security.                                                                                                                                                                                               |
-| **The Solution**         | A federated, on-device security mesh where each AMD-powered laptop runs a local threat detector on the XDNA NPU. When one laptop detects a new threat, federated learning instantly shares the detection pattern (not the raw data) with all peers. A multi-agent system handles detection, alerting, and remediation.                                                                                                                                                  |
-| **Differentiating Tech** | **AMD Ryzen AI / XDNA NPU**: On-device malware classification at wire speed. **Federated Learning**: Threat intelligence shared across hostel mesh without raw file sharing. **A2A Protocol**: Detection Agent, Alert Agent, and Remediation Agent coordinate across machines. **MCP Servers**: Connect to local file system, network logs, and threat intelligence feeds. **XAI**: "This file is suspicious because it matches behavioral pattern X (78% confidence)." |
-| **System Architecture**  | `Laptop receives file/URL → On-device Detection Agent (XDNA NPU) classifies using local model → If threat detected: (A2A) Alert Agent notifies mesh peers → Federated Learning server aggregates detection patterns (no raw data) → All peers update local models → Remediation Agent suggests quarantine/delete → XAI explains threat classification. Network-wide: Dashboard shows hostel threat heatmap.`                                                            |
-| **Key Features**         | 1. On-device malware/phishing detection on AMD XDNA NPU 2. Federated threat intelligence across hostel mesh 3. A2A coordination between Detection, Alert, and Remediation agents 4. Zero raw file sharing (privacy-preserving) 5. XAI threat explanations for non-technical students 6. Hostel-wide threat heatmap dashboard                                                                                                                                            |
-| **Tech Stack**           | ONNX Runtime (XDNA), Flower (federated learning), A2A protocol, MCP SDK, LangGraph, EMBER malware dataset, FastAPI, Electron, React, D3.js                                                                                                                                                                                                                                                                                                                              |
-| **Wow Factor**           | Demo: one laptop detects a novel threat → within 30 seconds, all 5 demo machines have updated detection models via federated learning without a single file being shared. Show the hostel heatmap lighting up as the threat propagates — and then going green as mesh defense activates.                                                                                                                                                                                |
-| **MVP Scope**            | 3-node demo mesh (can be virtual machines), on-device classifier for malicious URLs/files, federated model update pipeline, A2A alert propagation, basic heatmap dashboard.                                                                                                                                                                                                                                                                                             |
-| **Pitch Story**          | "In an NIT Trichy hostel, one student downloads cracked software. Within an hour, 30 laptops are infected. GuardianMesh turns every AMD laptop into a collaborative security node — the first detection protects the entire hostel in 30 seconds, and no one's files ever leave their machine."                                                                                                                                                                         |
-| **Responsible AI**       | Zero raw data sharing (only model gradients), no file content exposed, differential privacy on federated updates, transparent threat classifications, no surveillance capability (detection is consensual, student-controlled).                                                                                                                                                                                                                                         |
+
+## 11. Key Statistics & Data Points (India-Specific) {#stats}
+
+Use these in your presentation for maximum impact:
+
+| Stat                                                               | Source               | Use In                 |
+| ------------------------------------------------------------------ | -------------------- | ---------------------- |
+| **₹36,014 crore** in bank frauds (FY2024-25)                       | RBI Annual Report    | Problem slide          |
+| **23,953 fraud cases** reported in FY2024-25                       | RBI Annual Report    | Problem slide          |
+| **56.5%** of fraud cases are digital payment fraud                 | RBI Annual Report    | Digital fraud focus    |
+| **₹21,515 crore** in H1 FY2025-26 (30% increase)                   | Indian Express/RBI   | Urgency                |
+| **5-6 hours** per SAR narrative (manual)                           | Problem Statement    | SAR problem slide      |
+| **₹2,000 crore** lost to digital arrest scams (FY25-26)            | BioCatch Report      | Deepfake slide         |
+| **7-day deadline** for STR filing to FIU-IND                       | RBI Guidelines       | Urgency of automation  |
+| **92%** of fraud value is loan-related                             | RBI Annual Report    | Context                |
+| **47 accounts → ₹50 lakhs** example                                | Problem Statement    | SAR demo               |
+| **3 seconds** of audio sufficient for voice cloning                | CFCA/Dialzara Report | Voice deepfake slide   |
+| **980 corporate infiltration** cases via voice deepfakes (Q3 2025) | Dialzara Research    | Voice deepfake urgency |
+| **$5.22 billion** projected US RegTech investment                  | Key Compliance Group | Market opportunity     |
+
 ---
-# 🏆 TOP 3 PICKS — RANKED
+
+## Appendix A: Quick Reference — What Makes This Different
+
+| Traditional Approach             | Our Approach                            |
+| -------------------------------- | --------------------------------------- |
+| Cloud-based, data goes outside   | **100% offline**, local LLMs            |
+| Single fraud vector (email only) | **10+ fraud vectors** in one platform   |
+| Manual SAR writing (5-6 hours)   | **AI-assisted** SAR in 10 minutes       |
+| Black-box AI decisions           | **Full audit trail** with reasoning     |
+| Proprietary, vendor lock-in      | **Open-source** stack, modular          |
+| Siloed detection and reporting   | **Integrated** detection → SAR pipeline |
+| No inter-agent standards         | **MCP + A2A** protocols                 |
+| Static rules                     | **Continuous learning** from feedback   |
+
 ---
-## Rank 1: **SkillGraph** (Idea 2.1)
-| Criterion          | Score    | Justification                                                                                                                                                                                                    |
-| ------------------ | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Uniqueness         | **9/10** | Knowledge-graph + A2A multi-agent diagnosis is far beyond typical "AI tutor" submissions. No one builds curriculum-wide prerequisite graphs with agent collaboration.                                            |
-| Impact             | **9/10** | Prerequisite gap blindness is the #1 silent killer of engineering student performance. This addresses the root cause, not the symptom.                                                                           |
-| Demo-ability       | **9/10** | The moment you show a student failing an ML question and the graph tracing it back 3 semesters to a math gap — judges will be stunned. The visual is unforgettable.                                              |
-| Technical Depth    | **9/10** | Neo4j + A2A + MCP + RAG + LangGraph — genuine architectural depth, not buzzword stacking.                                                                                                                        |
-| **Overall: 36/40** |          | **This wins because it solves a universally recognized problem (prerequisite gaps) with a novel architecture (knowledge graph + multi-agent A2A) that produces a visually stunning, emotionally resonant demo.** |
-**Demo Script**: (1) Show pre-built CSE knowledge graph in Neo4j (30s). (2) Student takes 5-question ML quiz, intentionally gets SVM question wrong (60s). (3) Diagnostic Agent traces gap through graph to "Lagrange multipliers" from Sem 3 (60s). (4) Pathway Agent generates 3-day remediation plan (30s). (5) Content Agent generates micro-lesson in Hindi (60s). (6) Show A2A communication logs between agents (30s).
-**Judge Questions**:
-1. _"How do you build the knowledge graph?"_ → "We parse AICTE model curriculum PDFs + textbook TOCs using LLM-assisted extraction into Neo4j. For the MVP we hand-curated 50 CSE concepts with 200 prerequisite edges — but the extraction pipeline is automated."
-2. _"How is this different from Khan Academy?"_ → "Khan Academy is content-first — it has videos but no diagnostic engine. We're diagnosis-first: we find the _specific_ invisible gap and generate _targeted_ remediation, not a generic playlist."
-3. _"Does A2A add real value or is it buzzword?"_ → "Absolutely real. The Diagnostic Agent needs to _discover_ what the Content Agent can teach (which languages, which formats). A2A's capability cards make this dynamic — if we add a Video Agent tomorrow, Diagnostic Agent discovers it automatically."
----
-## Rank 2: **ProvenanceAI** (Idea 1.3) — CROSS-THEME
-| Criterion          | Score     | Justification                                                                                                                                                                    |
-| ------------------ | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Uniqueness         | **10/10** | Nobody is building ZKP-based creative contribution proofs. This is a genuinely novel concept with no existing competitors.                                                       |
-| Impact             | **8/10**  | The AI plagiarism debate is raging in every Indian university. This provides a constructive solution instead of just detection.                                                  |
-| Demo-ability       | **8/10**  | ZKP proof generation + heatmap visualization is visually compelling. The "72% human contribution" moment is a mic-drop.                                                          |
-| Technical Depth    | **9/10**  | ZKP + Merkle trees + LangGraph + MCP + XAI — this is genuine cryptographic innovation applied to education.                                                                      |
-| **Overall: 35/40** |           | **This wins on sheer novelty. ZKP applied to AI attribution is a concept judges have literally never seen. The cross-theme angle (GenAI + Cybersecurity) is a strategic bonus.** |
-**Demo Script**: (1) Student opens editor, types a prompt, gets AI draft (30s). (2) Student makes substantive edits — system logs every interaction (60s). (3) Student clicks "Generate Proof" — ZKP generates contribution certificate (30s). (4) Faculty opens verification portal, pastes proof — sees "72% human contribution" + heatmap (60s). (5) Show Merkle tree of interaction log (30s). (6) Explain ZKP: "The faculty learned the percentage but literally nothing about the prompts" (30s).
-**Judge Questions**:
-1. _"Can students game the system?"_ → "The Merkle tree logs semantic delta, not just keystrokes. Copy-pasting the AI output and changing 2 words registers as trivial edits. Our semantic similarity threshold requires genuine rethinking."
-2. _"Is ZKP overkill?"_ → "No — the alternative is revealing full prompt history, which is a privacy violation. Students' creative process is personal. ZKP is the _only_ way to prove contribution without exposure."
-3. _"How heavy is ZKP computation?"_ → "We use Groth16 proofs via SnarkJS — proof generation takes ~2 seconds for a typical document. Verification is <100ms. Well within interactive use."
----
-## Rank 3: **PhishNet** (Idea 3.1)
-| Criterion          | Score    | Justification                                                                                                                                                                           |
-| ------------------ | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Uniqueness         | **8/10** | Phishing training exists, but campus-specific + A2A adaptive + on-device analysis combo is novel. The "Infosys placement scam" angle is very India-specific.                            |
-| Impact             | **9/10** | Phishing is the #1 cyber threat to Indian students. This directly reduces real-world harm.                                                                                              |
-| Demo-ability       | **9/10** | Generating a realistic fake placement email and then having AI annotate 7 red flags is jaw-dropping. On-device inbox scanning adds the "this is real" factor.                           |
-| Technical Depth    | **8/10** | A2A + LangGraph + MCP + on-device AMD + XAI — solid multi-component architecture.                                                                                                       |
-| **Overall: 34/40** |          | **This wins on demo-ability and real-world relevance. Every Indian student in the audience will relate to the placement scam scenario. The on-device AMD angle satisfies the sponsor.** |
-**Demo Script**: (1) Show a real phishing email that targeted IIT students last year (30s). (2) PhishNet generates a similar campus-specific phishing email (30s). (3) Student tries to identify red flags — misses 3 of 7 (60s). (4) XAI module annotates all 7 red flags with explanations (60s). (5) A2A escalation: Attack Agent generates a harder variant (30s). (6) On-device inbox scan flags 1 suspicious email in real inbox (30s).
-**Judge Questions**:
-1. _"Aren't you training students to create phishing emails?"_ → "The generation model is sandboxed — it only outputs within our training UI, never as sendable emails. We use content fingerprinting to prevent copy-paste extraction."
-2. _"Why on-device for URL analysis?"_ → "Students' email data is extremely sensitive. Cloud analysis means uploading inbox contents— unacceptable. AMD XDNA can classify URLs in <10ms locally with zero privacy risk."
-3. _"How do you keep scenarios up to date?"_ → "MCP connects to PhishTank and URLhaus threat feeds. When online, the Attack Agent ingests latest scam patterns. Offline, it uses the locally cached model."
+
+## Appendix B: Datasets & Resources
+
+| Resource               | URL                                                                         | Purpose                           |
+| ---------------------- | --------------------------------------------------------------------------- | --------------------------------- |
+| Enron Email Dataset    | https://www.cs.cmu.edu/~enron/                                              | Legitimate email baseline         |
+| Kaggle Phishing Emails | Search Kaggle for "phishing email dataset"                                  | Training phishing classifier      |
+| ASVspoof Challenge     | https://www.asvspoof.org/                                                   | Voice deepfake detection training |
+| OWASP LLM Top 10       | https://owasp.org/www-project-top-10-for-large-language-model-applications/ | Prompt injection test cases       |
+| PhishTank              | https://www.phishtank.com/                                                  | Known phishing URLs               |
+| Have I Been Pwned      | https://haveibeenpwned.com/                                                 | Credential leak checking          |
+| MCP Specification      | https://modelcontextprotocol.io/                                            | MCP implementation guide          |
+| A2A Protocol           | https://github.com/google/A2A                                               | A2A implementation guide          |
+| Ollama                 | https://ollama.ai/                                                          | Local LLM hosting                 |
+| LangChain              | https://langchain.com/                                                      | LLM orchestration                 |
+| ChromaDB               | https://www.trychroma.com/                                                  | Vector database                   |
